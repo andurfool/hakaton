@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Telegram Web App переменные стилей */
+:root {
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-text-color: #000000;
+  --tg-theme-hint-color: #999999;
+  --tg-theme-link-color: #2678b6;
+  --tg-theme-button-color: #2678b6;
+  --tg-theme-button-text-color: #ffffff;
+  --tg-theme-secondary-bg-color: #f2f2f2;
+}
+
+@layer base {
+  html {
+    font-family: "Inter var", system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-tg-theme-bg text-tg-theme-text min-h-screen overflow-x-hidden;
+    overscroll-behavior-y: none;
+  }
+
+  /* Скрытие scrollbar для Chrome, Safari и Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Скрытие scrollbar для IE, Edge и Firefox */
+  * {
+    -ms-overflow-style: none; /* IE и Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* Стили для элементов интерфейса */
+  button {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500;
+  }
+
+  /* Улучшение контрастности при использовании тёмной темы */
+  @media (prefers-color-scheme: dark) {
+    body {
+      @apply text-gray-100;
+    }
+  }
+}
+
+@layer components {
+  /* Главный контейнер */
+  .main-container {
+    @apply px-4 max-w-screen-lg mx-auto pb-20;
+  }
+
+  /* Карточки */
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-soft p-4 mb-4;
+  }
+
+  /* Кнопки */
+  .btn {
+    @apply flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 ease-in-out;
+  }
+
+  .btn-primary {
+    @apply bg-tg-theme-button text-tg-theme-button-text hover:opacity-90 active:opacity-80;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700;
+  }
+
+  /* Нижняя навигация */
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-md flex justify-around items-center py-2 z-50;
+  }
+
+  .nav-item {
+    @apply flex flex-col items-center px-3 py-1 text-sm;
+  }
+
+  .nav-item.active {
+    @apply text-primary-600 dark:text-primary-400;
+  }
+
+  /* Анимации */
+  .fade-in {
+    @apply animate-fade-in;
+  }
+
+  .slide-up {
+    @apply animate-slide-up;
+  }
+
+  .scale-in {
+    @apply animate-scale-in;
+  }
+  
+  /* Стили для shadow-soft */
+  .shadow-soft {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+} 
