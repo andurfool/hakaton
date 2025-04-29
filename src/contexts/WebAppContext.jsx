@@ -17,9 +17,10 @@ export const WebAppProvider = ({ children }) => {
     const telegramWebApp = window.Telegram?.WebApp;
     
     if (telegramWebApp) {
+      // Инициализация в production
       setWebApp(telegramWebApp);
+      telegramWebApp.ready();
       
-      // Получаем данные инициализации
       try {
         const parsedInitData = telegramWebApp.initDataUnsafe || {};
         setInitData(parsedInitData);
@@ -31,13 +32,18 @@ export const WebAppProvider = ({ children }) => {
         telegramWebApp.onEvent('themeChanged', () => {
           setColorScheme(telegramWebApp.colorScheme);
         });
+
+        // Расширяем окно приложения
+        if (!telegramWebApp.isExpanded) {
+          telegramWebApp.expand();
+        }
       } catch (error) {
         console.error('Ошибка инициализации WebApp:', error);
       }
-    } else {
+    } else if (process.env.NODE_ENV === 'development') {
+      // Mock только для разработки
       console.warn('Telegram WebApp не обнаружен. Запускаем в режиме разработки.');
       
-      // Mock для разработки
       setWebApp({
         isExpanded: true,
         expand: () => console.log('Expand app'),
@@ -45,25 +51,18 @@ export const WebAppProvider = ({ children }) => {
         showAlert: (message) => alert(message),
         showConfirm: (message) => confirm(message),
         ready: () => console.log('App ready'),
-        setHeaderColor: (color) => console.log('Set header color:', color),
         MainButton: {
           show: () => console.log('Show main button'),
           hide: () => console.log('Hide main button'),
           setParams: (params) => console.log('Set main button params:', params),
-          onClick: (callback) => { 
-            window._mainButtonCallback = callback; 
-            console.log('Main button click handler set');
-          },
+          onClick: (callback) => window._mainButtonCallback = callback
         },
         BackButton: {
           show: () => console.log('Show back button'),
           hide: () => console.log('Hide back button'),
-          onClick: (callback) => {
-            window._backButtonCallback = callback;
-            console.log('Back button click handler set');
-          },
+          onClick: (callback) => window._backButtonCallback = callback
         },
-        openLink: (url) => window.open(url, '_blank'),
+        openLink: (url) => window.open(url, '_blank')
       });
 
       setInitData({
@@ -72,10 +71,14 @@ export const WebAppProvider = ({ children }) => {
           first_name: 'Тестовый',
           last_name: 'Пользователь',
           username: 'test_user',
-          language_code: 'ru',
+          language_code: 'ru'
         },
-        start_param: '',
+        start_param: ''
       });
+    } else {
+      // В production без Telegram WebApp показываем ошибку
+      console.error('Приложение должно быть открыто в Telegram');
+      document.body.innerHTML = '<div style="padding: 20px; text-align: center;">Это приложение может быть открыто только в Telegram</div>';
     }
   }, []);
 
